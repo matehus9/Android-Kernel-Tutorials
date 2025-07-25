@@ -6,14 +6,14 @@ echo -e "\n[INFO]: BUILD STARTED..!\n"
 git submodule init && git submodule update
 
 export KERNEL_ROOT="$(pwd)"
-export ARCH=arm64
-export KBUILD_BUILD_USER="@ravindu644"
+export ARCH=arm
+export KBUILD_BUILD_USER="@Matheus"
 
 # Install the requirements for building the kernel when running the script for the first time
 if [ ! -f ".requirements" ]; then
-    sudo apt update && sudo apt install -y git device-tree-compiler lz4 xz-utils zlib1g-dev openjdk-17-jdk gcc g++ python3 python-is-python3 p7zip-full android-sdk-libsparse-utils erofs-utils \
-        default-jdk git gnupg flex bison gperf build-essential zip curl libc6-dev libncurses-dev libx11-dev libreadline-dev libgl1 libgl1-mesa-dev \
-        python3 make sudo gcc g++ bc grep tofrodos python3-markdown libxml2-utils xsltproc zlib1g-dev python-is-python3 libc6-dev libtinfo6 \
+        apt update && apt install -y git device-tree-compiler lz4 xz-utils zlib1g-dev openjdk-17-jdk gcc g++ python3 python-is-python3 p7zip-full android-sdk-libsparse-utils erofs-utils \
+        git gnupg flex bison gperf build-essential zip curl libc6-dev libncurses-dev libx11-dev libreadline-dev libgl1 libgl1-mesa-dev \
+        python3 sudo gcc g++ bc grep tofrodos python3-markdown libxml2-utils xsltproc zlib1g-dev python-is-python3 libc6-dev libtinfo6 \
         make repo cpio kmod openssl libelf-dev pahole libssl-dev libarchive-tools zstd --fix-missing && wget http://security.ubuntu.com/ubuntu/pool/universe/n/ncurses/libtinfo5_6.3-2ubuntu0.1_amd64.deb && sudo dpkg -i libtinfo5_6.3-2ubuntu0.1_amd64.deb && touch .requirements
 fi
 
@@ -51,7 +51,7 @@ export BUILD_OPTIONS="
 -C ${KERNEL_ROOT} \
 O=${KERNEL_ROOT}/out \
 -j$(nproc) \
-ARCH=arm64 \
+ARCH=arm \
 CROSS_COMPILE=${BUILD_CROSS_COMPILE} \
 CC=${BUILD_CC} \
 CLANG_TRIPLE=aarch64-linux-gnu- \
@@ -60,7 +60,7 @@ CLANG_TRIPLE=aarch64-linux-gnu- \
 build_kernel(){
     # Make default configuration.
     # Replace 'your_defconfig' with the name of your kernel's defconfig
-    make ${BUILD_OPTIONS} your_defconfig
+    make ${BUILD_OPTIONS} ice_defconfig
 
     # Configure the kernel (GUI)
     make ${BUILD_OPTIONS} menuconfig
@@ -69,7 +69,7 @@ build_kernel(){
     make ${BUILD_OPTIONS} Image || exit 1
 
     # Copy the built kernel to the build directory
-    cp "${KERNEL_ROOT}/out/arch/arm64/boot/Image" "${KERNEL_ROOT}/build"
+    cp "${KERNEL_ROOT}/out/arch/arm/boot/Image" "${KERNEL_ROOT}/build"
 
     echo -e "\n[INFO]: BUILD FINISHED..!"
 }
